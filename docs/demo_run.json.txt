@@ -1,0 +1,28 @@
+$ python -m src.WebAPI.bootstrap
+
+{
+  "http_status": 201,
+  "body": {
+    "id": "bc4a6296-7e51-4bfc-8208-57e979ef709d",
+    "customerId": "550e8400-e29b-41d4-a716-446655440000",
+    "items": [
+      {
+        "product": {
+          "productId": "497f6eca-6276-4993-bfeb-53cbbbaf6080",
+          "name": "Mechanical Keyboard",
+          "unitPrice": 99.99
+        },
+        "quantity": 2
+      }
+    ],
+    "totalAmount": 199.98,
+    "status": "NEW",
+    "shippingAddress": {
+      "city": "Kyiv",
+      "street": "Khreshchatyk 1",
+      "postalCode": "01001",
+      "country": "Ukraine"
+    },
+    "createdAt": "2026-10-24T11:08:52.728186+00:00"
+  }
+}

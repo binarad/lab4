@@ -1,0 +1,20 @@
+$ python -c import sys, unittest; suite=unittest.defaultTestLoader.loadTestsFromName('tests.test_create_order'); result=unittest.TextTestRunner(verbosity=2).run(suite); forbidden=[m for m in sys.modules if m.startswith(('src.Infrastructure','src.WebAPI'))]; print('Infrastructure/WebAPI imports:', forbidden); sys.exit(not result.wasSuccessful() or bool(forbidden))
+
+Infrastructure/WebAPI imports: []
+test_clock_failure_does_not_write (tests.test_create_order.CreateOrderTests.test_clock_failure_does_not_write) ... ok
+test_empty_order_does_not_write (tests.test_create_order.CreateOrderTests.test_empty_order_does_not_write) ... ok
+test_free_product_is_allowed_by_original_contract (tests.test_create_order.CreateOrderTests.test_free_product_is_allowed_by_original_contract) ... ok
+test_invalid_address_does_not_write (tests.test_create_order.CreateOrderTests.test_invalid_address_does_not_write) ... ok
+test_invalid_customer_identity_does_not_write (tests.test_create_order.CreateOrderTests.test_invalid_customer_identity_does_not_write) ... ok
+test_invalid_prices_do_not_write (tests.test_create_order.CreateOrderTests.test_invalid_prices_do_not_write) ... ok
+test_invalid_quantities_do_not_write (tests.test_create_order.CreateOrderTests.test_invalid_quantities_do_not_write) ... ok
+test_item_count_limit (tests.test_create_order.CreateOrderTests.test_item_count_limit) ... ok
+test_port_failure_propagates_without_hidden_io (tests.test_create_order.CreateOrderTests.test_port_failure_propagates_without_hidden_io) ... ok
+test_success_saves_order_through_port (tests.test_create_order.CreateOrderTests.test_success_saves_order_through_port) ... ok
+test_total_is_exact_for_decimal_prices (tests.test_create_order.CreateOrderTests.test_total_is_exact_for_decimal_prices) ... ok
+test_total_overflow_does_not_write (tests.test_create_order.CreateOrderTests.test_total_overflow_does_not_write) ... ok
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.005s
+
+OK

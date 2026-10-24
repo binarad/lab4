@@ -1,0 +1,40 @@
+$ python -m unittest discover -s tests -v
+
+test_circular_dependency_is_rejected (test_container.ContainerTests.test_circular_dependency_is_rejected) ... ok
+test_closed_scope_is_rejected (test_container.ContainerTests.test_closed_scope_is_rejected) ... ok
+test_complete_object_graph_creates_order (test_container.ContainerTests.test_complete_object_graph_creates_order) ... ok
+test_scoped_is_shared_within_request_and_distinct_across_requests (test_container.ContainerTests.test_scoped_is_shared_within_request_and_distinct_across_requests) ... ok
+test_singleton_cannot_capture_scoped_dependency (test_container.ContainerTests.test_singleton_cannot_capture_scoped_dependency) ... ok
+test_singleton_clock_is_shared_across_requests (test_container.ContainerTests.test_singleton_clock_is_shared_across_requests) ... ok
+test_transient_generator_is_always_new (test_container.ContainerTests.test_transient_generator_is_always_new) ... ok
+test_bad_payload_does_not_call_scenario (test_controller.ControllerTests.test_bad_payload_does_not_call_scenario) ... ok
+test_client_total_and_status_cannot_override_server_values (test_controller.ControllerTests.test_client_total_and_status_cannot_override_server_values) ... ok
+test_decimal_json_value_is_preserved_in_dto (test_controller.ControllerTests.test_decimal_json_value_is_preserved_in_dto) ... ok
+test_domain_error_maps_to_422_problem_details (test_controller.ControllerTests.test_domain_error_maps_to_422_problem_details) ... ok
+test_missing_nested_fields_do_not_call_scenario (test_controller.ControllerTests.test_missing_nested_fields_do_not_call_scenario) ... ok
+test_non_numeric_price_is_not_silently_coerced (test_controller.ControllerTests.test_non_numeric_price_is_not_silently_coerced) ... ok
+test_port_error_maps_to_503_without_leaking_details (test_controller.ControllerTests.test_port_error_maps_to_503_without_leaking_details) ... ok
+test_success_matches_original_contract_fields (test_controller.ControllerTests.test_success_matches_original_contract_fields) ... ok
+test_clock_failure_does_not_write (test_create_order.CreateOrderTests.test_clock_failure_does_not_write) ... ok
+test_empty_order_does_not_write (test_create_order.CreateOrderTests.test_empty_order_does_not_write) ... ok
+test_free_product_is_allowed_by_original_contract (test_create_order.CreateOrderTests.test_free_product_is_allowed_by_original_contract) ... ok
+test_invalid_address_does_not_write (test_create_order.CreateOrderTests.test_invalid_address_does_not_write) ... ok
+test_invalid_customer_identity_does_not_write (test_create_order.CreateOrderTests.test_invalid_customer_identity_does_not_write) ... ok
+test_invalid_prices_do_not_write (test_create_order.CreateOrderTests.test_invalid_prices_do_not_write) ... ok
+test_invalid_quantities_do_not_write (test_create_order.CreateOrderTests.test_invalid_quantities_do_not_write) ... ok
+test_item_count_limit (test_create_order.CreateOrderTests.test_item_count_limit) ... ok
+test_port_failure_propagates_without_hidden_io (test_create_order.CreateOrderTests.test_port_failure_propagates_without_hidden_io) ... ok
+test_success_saves_order_through_port (test_create_order.CreateOrderTests.test_success_saves_order_through_port) ... ok
+test_total_is_exact_for_decimal_prices (test_create_order.CreateOrderTests.test_total_is_exact_for_decimal_prices) ... ok
+test_total_overflow_does_not_write (test_create_order.CreateOrderTests.test_total_overflow_does_not_write) ... ok
+test_address_length_boundaries (test_domain.DomainTests.test_address_length_boundaries) ... ok
+test_entities_compare_by_identity (test_domain.DomainTests.test_entities_compare_by_identity) ... ok
+test_long_product_name_is_rejected (test_domain.DomainTests.test_long_product_name_is_rejected) ... ok
+test_naive_timestamp_is_rejected (test_domain.DomainTests.test_naive_timestamp_is_rejected) ... ok
+test_quantity_1000_is_accepted (test_domain.DomainTests.test_quantity_1000_is_accepted) ... ok
+test_value_objects_compare_by_value (test_domain.DomainTests.test_value_objects_compare_by_value) ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests in 0.007s
+
+OK

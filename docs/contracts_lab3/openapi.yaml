@@ -1,0 +1,378 @@
+openapi: 3.0.3
+info:
+  title: E-Commerce Order Service API
+  version: 1.0.0
+  description: |
+    Публічний REST API сервісу оформлення замовлень E-Commerce Cloud Platform.
+    Контракт спроєктовано за підходом Contract-First.
+    REST використовується на межі системи через API Gateway, а внутрішня
+    взаємодія між Order, Payment та Inventory виконується через gRPC/AMQP.
+  contact:
+    name: E-Commerce Platform Team
+servers:
+  - url: http://localhost:4010
+    description: Prism Mock Server
+tags:
+  - name: Orders
+    description: Операції із замовленнями
+
+paths:
+  /orders:
+    get:
+      tags: [Orders]
+      summary: Отримати список замовлень поточного користувача
+      parameters:
+        - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/Cursor'
+        - in: query
+          name: status
+          description: Фільтр за статусом замовлення
+          schema:
+            $ref: '#/components/schemas/OrderStatus'
+      responses:
+        '200':
+          description: Список замовлень
+          headers:
+            X-KhNTU-Trace-ID:
+              $ref: '#/components/headers/X-KhNTU-Trace-ID'
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [items, pagination]
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Order'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      tags: [Orders]
+      summary: Створити замовлення з кошика
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+      responses:
+        '201':
+          description: Замовлення створено
+          headers:
+            X-KhNTU-Trace-ID:
+              $ref: '#/components/headers/X-KhNTU-Trace-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+
+  /orders/{orderId}:
+    get:
+      tags: [Orders]
+      summary: Отримати замовлення
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '200':
+          description: Дані замовлення
+          headers:
+            X-KhNTU-Trace-ID:
+              $ref: '#/components/headers/X-KhNTU-Trace-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      tags: [Orders]
+      summary: Оновити статус замовлення
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderRequest'
+      responses:
+        '200':
+          description: Статус замовлення оновлено
+          headers:
+            X-KhNTU-Trace-ID:
+              $ref: '#/components/headers/X-KhNTU-Trace-ID'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntity'
+    delete:
+      tags: [Orders]
+      summary: Скасувати замовлення
+      parameters:
+        - $ref: '#/components/parameters/OrderId'
+      responses:
+        '204':
+          description: Замовлення скасовано
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+components:
+  headers:
+    X-KhNTU-Trace-ID:
+      description: Telemetry correlation header [KhNTU-Lab3-API]
+      schema:
+        type: string
+        example: 6f7a2b5c-6d5f-4b92-9f20-9a2c1c8e7d11
+
+  parameters:
+    OrderId:
+      name: orderId
+      in: path
+      required: true
+      description: Унікальний ідентифікатор замовлення
+      schema:
+        type: string
+        format: uuid
+    Limit:
+      name: limit
+      in: query
+      description: Кількість записів на сторінку
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    Cursor:
+      name: cursor
+      in: query
+      description: Курсор для пагінації
+      schema:
+        type: string
+
+  responses:
+    BadRequest:
+      description: Некоректний HTTP-запит
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            type: https://ecommerce.example/problems/bad-request
+            title: Bad Request
+            status: 400
+            detail: Некоректний параметр запиту
+    Unauthorized:
+      description: Необхідна автентифікація
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            type: https://ecommerce.example/problems/unauthorized
+            title: Unauthorized
+            status: 401
+            detail: Потрібна автентифікація через OAuth 2.0/OIDC
+    NotFound:
+      description: Замовлення не знайдено
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            type: https://ecommerce.example/problems/not-found
+            title: Not Found
+            status: 404
+            detail: Замовлення з указаним ідентифікатором не існує
+    UnprocessableEntity:
+      description: Бізнес- або валідаційна помилка
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/ProblemDetails'
+          example:
+            type: https://ecommerce.example/problems/validation
+            title: Unprocessable Entity
+            status: 422
+            detail: Замовлення не може перейти у вказаний стан
+
+  schemas:
+    OrderStatus:
+      type: string
+      enum:
+        - NEW
+        - CONFIRMED
+        - PAID
+        - PROCESSING
+        - SHIPPED
+        - DELIVERED
+        - CANCELLED
+      example: CONFIRMED
+
+    ProductSnapshot:
+      type: object
+      required: [productId, name, unitPrice]
+      properties:
+        productId:
+          type: string
+          format: uuid
+        name:
+          type: string
+          minLength: 1
+          maxLength: 200
+          example: Mechanical Keyboard
+        unitPrice:
+          type: number
+          format: double
+          minimum: 0
+          example: 99.99
+
+    OrderItem:
+      type: object
+      required: [product, quantity]
+      properties:
+        product:
+          $ref: '#/components/schemas/ProductSnapshot'
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          example: 2
+
+    Address:
+      type: object
+      required: [city, street, postalCode, country]
+      properties:
+        city:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: "Kyiv"
+        street:
+          type: string
+          minLength: 2
+          maxLength: 200
+          example: "Khreshchatyk 1"
+        postalCode:
+          type: string
+          minLength: 3
+          maxLength: 20
+          example: "01001"
+        country:
+          type: string
+          minLength: 2
+          maxLength: 100
+          example: "Ukraine"
+
+    Order:
+      type: object
+      required:
+        - id
+        - customerId
+        - items
+        - totalAmount
+        - status
+        - shippingAddress
+        - createdAt
+      properties:
+        id:
+          type: string
+          format: uuid
+        customerId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        totalAmount:
+          type: number
+          format: double
+          minimum: 0
+          example: 299.97
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2026-10-04T12:00:00Z'
+
+    CreateOrderRequest:
+      type: object
+      required: [customerId, items, shippingAddress]
+      properties:
+        customerId:
+          type: string
+          format: uuid
+        items:
+          type: array
+          minItems: 1
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/OrderItem'
+        shippingAddress:
+          $ref: '#/components/schemas/Address'
+
+    UpdateOrderRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+
+    Pagination:
+      type: object
+      required: [limit]
+      properties:
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        nextCursor:
+          type: string
+          nullable: true
+
+    ProblemDetails:
+      type: object
+      required: [type, title, status, detail]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          minimum: 400
+          maximum: 599
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri
+          nullable: true

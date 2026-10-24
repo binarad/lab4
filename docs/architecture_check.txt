@@ -1,0 +1,4 @@
+$ python tools/check_architecture.py
+
+PASS: dependency rule verified for 11 Python files.
+Domain imports only its own types and Python standard-library value types.

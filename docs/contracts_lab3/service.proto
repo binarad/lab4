@@ -1,0 +1,89 @@
+syntax = "proto3";
+
+package ecommerce.order.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// Internal contract for high-performance inter-service communication.
+// Public clients use REST/JSON through the API Gateway.
+// Order Service interacts with Payment and Inventory using gRPC,
+// while domain events are published through RabbitMQ/AMQP.
+
+service OrderService {
+  rpc GetOrder(GetOrderRequest) returns (Order);
+  rpc CreateOrder(CreateOrderRequest) returns (Order);
+  rpc WatchOrderStatus(WatchOrderStatusRequest) returns (stream OrderStatusEvent);
+}
+
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0;
+  ORDER_STATUS_NEW = 1;
+  ORDER_STATUS_CONFIRMED = 2;
+  ORDER_STATUS_PAID = 3;
+  ORDER_STATUS_PROCESSING = 4;
+  ORDER_STATUS_SHIPPED = 5;
+  ORDER_STATUS_DELIVERED = 6;
+  ORDER_STATUS_CANCELLED = 7;
+}
+
+message KhNTUAuditMetadata {
+  string trace_token = 1 [json_name = "traceToken"];
+}
+
+message GetOrderRequest {
+  string order_id = 1;
+  KhNTUAuditMetadata metadata = 2;
+}
+
+message CreateOrderRequest {
+  string customer_id = 1;
+  repeated OrderItem items = 2;
+  Address shipping_address = 3;
+  KhNTUAuditMetadata metadata = 4;
+}
+
+message WatchOrderStatusRequest {
+  string order_id = 1;
+}
+
+message Order {
+  string id = 1;
+  string customer_id = 2;
+  repeated OrderItem items = 3;
+  double total_amount = 4;
+  OrderStatus status = 5;
+  Address shipping_address = 6;
+  google.protobuf.Timestamp created_at = 7;
+  KhNTUAuditMetadata metadata = 8;
+}
+
+message OrderItem {
+  ProductSnapshot product = 1;
+  int32 quantity = 2;
+}
+
+message ProductSnapshot {
+  string product_id = 1;
+  string name = 2;
+  double unit_price = 3;
+}
+
+message Address {
+  string city = 1;
+  string street = 2;
+  string postal_code = 3;
+  string country = 4;
+
+  message GeoPoint {
+    double latitude = 1;
+    double longitude = 2;
+  }
+
+  GeoPoint coordinates = 5;
+}
+
+message OrderStatusEvent {
+  string order_id = 1;
+  OrderStatus status = 2;
+  google.protobuf.Timestamp occurred_at = 3;
+}

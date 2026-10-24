@@ -1,0 +1,17 @@
+Order Service: separate HTTP integration check (not unit tests)
+Bind: 127.0.0.1, ephemeral port; no external services or database.
+PASS create_order: POST /orders -> 201; application/json; charset=utf-8
+PASS reject_empty_order: POST /orders -> 422; application/problem+json; charset=utf-8
+PASS reject_zero_quantity: POST /orders -> 422; application/problem+json; charset=utf-8
+PASS reject_negative_price: POST /orders -> 422; application/problem+json; charset=utf-8
+PASS reject_bad_address: POST /orders -> 422; application/problem+json; charset=utf-8
+PASS reject_bad_uuid: POST /orders -> 422; application/problem+json; charset=utf-8
+PASS reject_missing_fields: POST /orders -> 400; application/problem+json; charset=utf-8
+PASS reject_bad_json: POST /orders -> 400; application/problem+json; charset=utf-8
+PASS reject_nan_json: POST /orders -> 400; application/problem+json; charset=utf-8
+PASS reject_double_overflow: POST /orders -> 422; application/problem+json; charset=utf-8
+PASS reject_wrong_route: POST /tasks -> 404; application/problem+json; charset=utf-8
+PASS reject_wrong_media: POST /orders -> 415; application/problem+json; charset=utf-8
+PASS reject_empty_body: POST /orders -> 413; application/problem+json; charset=utf-8
+PASS server_controls_total_and_status: POST /orders -> 201; application/json; charset=utf-8
+PASS: 14 checks; server stopped and socket closed.
