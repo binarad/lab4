@@ -1,6 +1,6 @@
 # Контракти ЛР №3: походження і межі
 
-Точні копії прочитаних локальних файлів:
+Адаптовані копії прочитаних локальних файлів:
 
 - `C:/Users/pozhi/Downloads/lab3_ecommerce_architecture/api/openapi.yaml`
 - `C:/Users/pozhi/Downloads/lab3_ecommerce_architecture/api/service.proto`
@@ -22,7 +22,7 @@ JSON-відповідь використовує число double вихідн�
 Ці відповіді слід додати до повного OpenAPI при подальшому розвитку контракту.
 Автентифікація зі згаданого в контракті API Gateway/OIDC тут не реалізована.
 
-## Перевірка копій
+## Перевірка адаптованих копій
 
-- `openapi.yaml`: SHA-256 `2bb548c80cbe03918f4d6f9b2176b19bd5fc50483734a2cbe7b798cbe26b8748`
-- `service.proto`: SHA-256 `350517839cc257a2ccfe8c015df32b8df322886e472d5b2e6ce6493ba0d088da`
+- `openapi.yaml`: SHA-256 `39793e46c56a42f5b38482e1001c70fba4b79253e9076e196150eb633da18930`
+- `service.proto`: SHA-256 `a5de2f08c3377d236ab791050736747e968eef2243a7db76d285271233c2cfea`

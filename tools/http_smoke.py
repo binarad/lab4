@@ -56,7 +56,7 @@ def main():
                     response = connection.getresponse()
                     body = json.loads(response.read())
                     assert response.status == expected, (name, response.status, body)
-                    UUID(response.getheader('X-KhNTU-Trace-ID'))
+                    UUID(response.getheader('X-Trace-ID'))
                     content_type = response.getheader('Content-Type')
                     if expected == 201:
                         assert content_type.startswith('application/json')

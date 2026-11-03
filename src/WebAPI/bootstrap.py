@@ -84,7 +84,7 @@ def make_handler(container):
             media = 'application/problem+json' if status >= 400 else 'application/json'
             self.send_header('Content-Type', media + '; charset=utf-8')
             self.send_header('Content-Length', str(len(data)))
-            self.send_header('X-KhNTU-Trace-ID', str(uuid4()))
+            self.send_header('X-Trace-ID', str(uuid4()))
             self.end_headers()
             self.wfile.write(data)
     return Handler

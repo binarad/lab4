@@ -26,20 +26,20 @@ enum OrderStatus {
   ORDER_STATUS_CANCELLED = 7;
 }
 
-message KhNTUAuditMetadata {
+message AuditMetadata {
   string trace_token = 1 [json_name = "traceToken"];
 }
 
 message GetOrderRequest {
   string order_id = 1;
-  KhNTUAuditMetadata metadata = 2;
+  AuditMetadata metadata = 2;
 }
 
 message CreateOrderRequest {
   string customer_id = 1;
   repeated OrderItem items = 2;
   Address shipping_address = 3;
-  KhNTUAuditMetadata metadata = 4;
+  AuditMetadata metadata = 4;
 }
 
 message WatchOrderStatusRequest {
@@ -54,7 +54,7 @@ message Order {
   OrderStatus status = 5;
   Address shipping_address = 6;
   google.protobuf.Timestamp created_at = 7;
-  KhNTUAuditMetadata metadata = 8;
+  AuditMetadata metadata = 8;
 }
 
 message OrderItem {
